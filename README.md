@@ -70,6 +70,11 @@ medical_ai_hackathon/
 Final = 0.7 * F1_macro(Sagittal) + 0.3 * (F1_macro(Axial) + F1_macro(Coronal)) / 2
 ```
 
+## 결과
+
+- [PathMNIST 워밍업 결과 (2026-04-25)](results/warmup_pathmnist.md) — Combined 0.7913, τ_A·τ_C = 0.882
+- 본 게임 결과: 데이터 도착 후
+
 ## 윤리 가드레일
 
 - ImageNet 등 pretrained weights 금지 (Random Init만)
