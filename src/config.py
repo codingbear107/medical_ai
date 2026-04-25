@@ -98,7 +98,9 @@ FEWSHOT_LABEL_SMOOTHING = 0.15
 
 # EWC
 EWC_LAMBDA = 5000.0
-FISHER_NUM_SAMPLES = 2000
+# 워밍업 결과: 2000으로도 잘 동작했으나 (Combined 0.79), 본 게임에선
+# 노이즈 줄이기 위해 5000으로 확장. T4 GPU에서도 1분 이내.
+FISHER_NUM_SAMPLES = 5000
 
 # Replay buffer (각 view에서 클래스당 N개)
 REPLAY_SAMPLES_PER_CLASS = 50

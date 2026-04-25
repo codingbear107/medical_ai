@@ -141,8 +141,10 @@ def main():
     candidates.append(("simple", {}, s, f1, acc))
 
     # 2) Task Arithmetic (init 필요)
+    # 워밍업 결과: λ≥0.7면 weights 발산 → λ<0.7만 의미 있는 결과.
+    # 본 게임도 보수적인 λ를 위주로 grid 확장.
     if init_state is not None:
-        for lam in [0.5, 0.7, 1.0, 1.3]:
+        for lam in [0.1, 0.3, 0.5, 0.7]:
             print(f"\n[2] Task Arithmetic (λ={lam}) ...")
             s = task_arithmetic(init_state, [state_a, state_c], lam=lam)
             f1, acc = eval_merged(s, num_classes, sag_loader, device)
@@ -158,9 +160,11 @@ def main():
         candidates.append(("fisher", {}, s, f1, acc))
 
     # 4) TIES-Merging (init 필요)
+    # 워밍업 결과: top_k=0.2~0.4는 너무 sparse → 거의 다 발산.
+    # 본 게임은 top_k 0.5~0.7 위주로 확장.
     if init_state is not None:
-        for top_k in [0.2, 0.4]:
-            for lam in [0.7, 1.0, 1.3]:
+        for top_k in [0.3, 0.5, 0.7]:
+            for lam in [0.3, 0.5, 0.7]:
                 print(f"\n[4] TIES (top_k={top_k}, λ={lam}) ...")
                 s = ties_merging(init_state, [state_a, state_c],
                                  top_k=top_k, lam=lam)
