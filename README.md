@@ -10,7 +10,8 @@ medical_ai_hackathon/
 ├── .gitignore
 ├── requirements_warmup.txt   # Colab 워밍업용
 ├── requirements_submit.txt   # 대회 제출용
-├── colab_main.ipynb          # Colab 마스터 노트북
+├── colab_auto.ipynb          # Colab 자동 노트북 (모두 실행 한 번이면 끝)
+├── colab_main.ipynb          # Colab 마스터 노트북 (단계별 수동 진행)
 └── src/
     ├── config.py
     ├── model.py              # MiniResNet-11
@@ -23,8 +24,21 @@ medical_ai_hackathon/
     ├── train_view.py         # view별 base 학습
     ├── merge_and_eval.py     # merge grid search
     ├── train_fewshot.py      # Sagittal few-shot fine-tuning
+    ├── runner.py             # 파이프라인 자동 실행 (skip 로직 포함)
     └── inference.py          # 제출용 추론 스크립트
 ```
+
+## 빠른 시작 (Colab)
+
+```
+1. https://colab.research.google.com → GitHub 탭 → codingbear107/medical_ai
+2. colab_auto.ipynb 열기
+3. 런타임 → 런타임 유형 변경 → T4 GPU
+4. 런타임 → 모두 실행 (Ctrl+F9)
+5. 30~40분 후 최종 결과 출력
+```
+
+이미 학습 끝낸 단계는 자동 skip. 세션 끊겨도 다시 실행하면 이어서 진행.
 
 ## 실행 흐름
 
