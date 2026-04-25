@@ -54,7 +54,7 @@ def get_sagittal_val_loader(args, num_classes):
         from dataset import create_view_datasets
         _, ds = create_view_datasets('S', augment_train=False)
     return DataLoader(ds, batch_size=args.batch_size, shuffle=False,
-                      num_workers=0, pin_memory=True)
+                      num_workers=2, pin_memory=True)
 
 
 def load_view_state(path, device='cpu'):

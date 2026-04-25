@@ -117,13 +117,15 @@ def main():
     print(f"[train_view] num_classes={num_classes}")
     print(f"[train_view] train={len(train_ds)}, val={len(val_ds)}")
 
-    # num_workers=0: PyTorch 2.2 + Python 3.12 multiprocessing이 비효율적이라
-    # single-process가 오히려 빠른 경우 많음. 28×28 augmentation은 가벼워서 OK.
+    # num_workers=2: View A 학습이 이걸로 ~30초/epoch 잘 작동함.
+    # num_workers=0은 single-thread augmentation으로 첫 배치 fetch가 매우 느림.
+    # persistent_workers=True로 worker 재생성 비용 제거.
     train_loader = DataLoader(train_ds, batch_size=args.batch_size,
-                              shuffle=True, num_workers=0, pin_memory=True,
-                              drop_last=True)
+                              shuffle=True, num_workers=2, pin_memory=True,
+                              drop_last=True, persistent_workers=True)
     val_loader = DataLoader(val_ds, batch_size=args.batch_size * 2,
-                            shuffle=False, num_workers=0, pin_memory=True)
+                            shuffle=False, num_workers=2, pin_memory=True,
+                            persistent_workers=True)
 
     # 모델 (seed 고정 후 생성 → init이 결정적)
     model = MiniResNet11(
