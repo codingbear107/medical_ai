@@ -86,11 +86,30 @@ def _run_step(name, cmd, expected_files, force=False):
     print(f"  실행: {' '.join(cmd)}")
     print()
     t0 = time.time()
-    result = subprocess.run(cmd, cwd=os.path.dirname(__file__))
+
+    # subprocess stdout을 실시간 stream (Colab buffer 문제 회피).
+    # python -u 추가로 python 자체 buffering도 끔.
+    if cmd[0].endswith('python') or cmd[0].endswith('python3'):
+        cmd = [cmd[0], '-u'] + cmd[1:]
+
+    proc = subprocess.Popen(
+        cmd, cwd=os.path.dirname(__file__),
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        bufsize=1, text=True,
+        env={**os.environ, 'PYTHONUNBUFFERED': '1'},
+    )
+    try:
+        for line in proc.stdout:
+            print(line, end='', flush=True)
+        proc.wait()
+    except KeyboardInterrupt:
+        proc.terminate()
+        proc.wait()
+        raise
     elapsed = time.time() - t0
 
-    if result.returncode != 0:
-        print(f"\n  ✗ 실패 (exit code {result.returncode}, {elapsed:.0f}초)")
+    if proc.returncode != 0:
+        print(f"\n  ✗ 실패 (exit code {proc.returncode}, {elapsed:.0f}초)")
         return False
 
     # 결과 파일 검증
