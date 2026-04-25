@@ -183,14 +183,14 @@ def main():
     combined = ConcatDataset(train_components)
 
     train_loader = DataLoader(combined, batch_size=args.batch_size,
-                              shuffle=True, num_workers=2, pin_memory=True,
+                              shuffle=True, num_workers=0, pin_memory=True,
                               drop_last=True)
     fs_val_loader = DataLoader(fs_val, batch_size=args.batch_size * 2,
-                               shuffle=False, num_workers=2)
+                               shuffle=False, num_workers=0)
     base_val_a_loader = DataLoader(base_val_a, batch_size=args.batch_size * 2,
-                                   shuffle=False, num_workers=2)
+                                   shuffle=False, num_workers=0)
     base_val_c_loader = DataLoader(base_val_c, batch_size=args.batch_size * 2,
-                                   shuffle=False, num_workers=2)
+                                   shuffle=False, num_workers=0)
 
     optimizer = torch.optim.AdamW(get_param_groups(model),
                                   weight_decay=config.FEWSHOT_WEIGHT_DECAY)

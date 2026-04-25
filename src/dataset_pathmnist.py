@@ -103,15 +103,11 @@ def view_transform(img, view):
     if view == 'A':
         return img.astype(np.float32)
     elif view == 'C':
-        out = np.rot90(img, k=1).copy()
-        # 약한 elastic (deterministic하게 만들기 위해 seed 없이 호출 — 학습 시 매번 약간 다름)
-        # 워밍업 목적이라 일정 강도 변형이면 충분
-        if np.random.random() < 0.5:
-            out = elastic_deformation(out, alpha=1.5, sigma=4.0)
-        return out
+        # 단순 90° 회전만. (elastic은 augmentation pipeline에서 이미 적용됨 → 중복 제거)
+        return np.rot90(img, k=1).copy().astype(np.float32)
     elif view == 'S':
-        out = np.rot90(img, k=3).copy()  # 270°
-        out = _gauss_blur(out, sigma=1.0)
+        # 270° 회전 + 가벼운 shear (50%). gauss_blur 제거 (CPU 부담 큼).
+        out = np.rot90(img, k=3).copy()
         if np.random.random() < 0.5:
             out = random_affine_shear(out, max_shear_deg=8)
         return out.astype(np.float32)
