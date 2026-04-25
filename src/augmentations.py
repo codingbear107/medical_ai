@@ -101,14 +101,36 @@ def elastic_deformation(img, alpha=2.0, sigma=4.0):
 
 
 def _box_filter_2d(arr, k):
-    """2D box filter (cumsum 기반, 빠름). reflect padding."""
+    """2D box filter (cumsum trick, 빠름). reflect padding으로 입력과 같은 크기 유지.
+
+    수식 검증 (k 홀수일 때):
+        pad = (k-1)/2
+        padded shape  = (H + k-1, W + k-1)
+        cs (앞에 0열 추가) shape = (H + k-1, W + k)
+        cs[:, k:] - cs[:, :-k]  → shape (H + k-1, W)  ← 정확히 W 폭
+        세로도 동일하게 → 최종 shape (H, W)
+    """
+    if k % 2 == 0:
+        k += 1  # 홀수 보장
     pad = k // 2
-    padded = np.pad(arr, pad, mode='reflect')
-    cs = np.cumsum(padded, axis=1)
-    h_filtered = (cs[:, k:] - cs[:, :-k]) / k
-    cs = np.cumsum(h_filtered, axis=0)
-    filtered = (cs[k:, :] - cs[:-k, :]) / k
-    return filtered[:arr.shape[0], :arr.shape[1]]
+    padded = np.pad(arr, pad, mode='reflect').astype(np.float32)
+    H_p, W_p = padded.shape
+
+    # 가로 box: prefix sum 앞에 0열 추가 → 정확히 입력 W 만큼 출력
+    cs = np.concatenate(
+        [np.zeros((H_p, 1), dtype=np.float32),
+         np.cumsum(padded, axis=1)], axis=1
+    )  # (H_p, W_p + 1)
+    h_filtered = (cs[:, k:] - cs[:, :-k]) / k  # (H_p, W_p + 1 - k) = (H_p, W)
+
+    # 세로 box: 같은 방식
+    cs2 = np.concatenate(
+        [np.zeros((1, h_filtered.shape[1]), dtype=np.float32),
+         np.cumsum(h_filtered, axis=0)], axis=0
+    )  # (H_p + 1, W)
+    v_filtered = (cs2[k:, :] - cs2[:-k, :]) / k  # (H, W)
+
+    return v_filtered.astype(np.float32)
 
 
 def random_crop_resize(img, crop_size=24, target_size=28):
