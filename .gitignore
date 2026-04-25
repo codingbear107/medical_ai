@@ -1,0 +1,52 @@
+# Data
+data/
+datasets/
+*.npz
+*.npy
+
+# Model checkpoints (큰 파일 GitHub에 안 올림)
+checkpoints/
+*.pth
+*.pt
+
+# Submissions (백업은 따로 관리)
+submissions/*.zip
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Colab Drive mount
+drive/
+
+# Environments
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Secrets
+.env
+.env.local
+*.key
+
+# Claude local settings
+.claude/
+
+# Logs
+*.log
+runs/
+wandb/

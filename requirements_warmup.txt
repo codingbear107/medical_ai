@@ -1,0 +1,9 @@
+# Colab 워밍업용 (PathMNIST 연습 단계)
+# 대회 평가 서버에는 medmnist가 없으므로, 제출 코드(inference.py)에서는 import 금지
+# PyTorch는 별도 설치 (cu121 wheel)
+medmnist==3.0.2
+numpy
+pandas
+scikit-learn
+nibabel
+Pillow

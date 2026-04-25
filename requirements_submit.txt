@@ -1,0 +1,9 @@
+# 대회 제출 환경 (Ubuntu 22.04, Python 3.10, CUDA 12.1)
+# 평가 서버는 폐쇄망, 아래 라이브러리만 사전 설치 보장
+torch==2.1.2
+torchvision==0.16.2
+numpy
+pandas
+scikit-learn
+nibabel
+Pillow
